@@ -1,6 +1,10 @@
 # ignore data folder
 /data/
 /yoon/submit/
+<<<<<<< HEAD
+/joe/data/
+=======
+>>>>>>> 0fdb5798b9df180ec7d5f603ec442a4feff02446
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
