@@ -1,0 +1,1 @@
+submit_kaggle(X, y, model_lgb, './submission/submit_xg.csv', "id", "country_destination")
