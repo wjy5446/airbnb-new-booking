@@ -5,6 +5,11 @@
 /joe/data/
 =======
 >>>>>>> 0fdb5798b9df180ec7d5f603ec442a4feff02446
+last_test.csv
+last_train.csv
+sessions.csv
+test_users.csv
+train_users_2.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
