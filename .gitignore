@@ -14,7 +14,7 @@ train_users_2.csv
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.csv
 # C extensions
 *.so
 
