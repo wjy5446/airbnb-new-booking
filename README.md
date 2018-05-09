@@ -1,74 +1,87 @@
-# Classfication Project 느낀점(airbnb-new-booking)
+# kaggle : Airbnb New User Bookings
 
+### 개요
 
+- Airbnb의 사용자가 어느나라를 예약할지 분류 예측문제
+- NDCG 를 통한 분류모델 평가
+- Light GBM 모델 사용
 
-### 목적의 중요성
+“최종 결과 : 0.88461 (상위 11% )”
 
--  Project를 진행할 때, 목적을 명확히 하지 않았다. Kaggle은 상위 5개의 class를 맞추는 것이었고, Project는 데이터의 인사이트를 도출 목적 가 명확하지 않았다.
--  그래서 Project를 진행할 때, 데이터를 
+### 데이터
 
+Train.csv
+- 트레이닝 데이터 : ​ (213451, 15)
+- Target 데이터 : country_destination (12개 클래스)
 
+Test.csv
+- 테스트 데이터 : (62096, 14)
+- 트레이닝 데이터를 통한 Target 데이터 예측
 
-### 신뢰성의 중요성
+Sessions.csv
+- 사용자 로그데이터: (10567737, 6)
+- 사용자의 action, action type, action details, device type, session elapsed
 
-- 데이터 분석의 목적은 '사장에게 자신이 만든 인사이트를 납득' 시키는 것이다. 그렇기 때문에 인사이트를 발표할 때 신뢰성을 주는 것이  중요!!
-- 신뢰성을 높이기 위해, `논리적인 전개 과정`과 `Code 공유` 한다. 또한 Project를 진행할 때, 사장의 질문에 대해 끊임 없는 답변을 생각해 두어야 한다.
+Countries.csv (target값에 대한 정보로 최종 미사용)
+- 목적지의 나라정보 : (10, 7)
 
+Age_gender_bkts.csv (target값에 대한 정보로 최종 미사용)
+- 목적지의 인구통계자료 : (420, 5)
 
+### 데이터 엔지니어링
 
-### Create features의 중요성
+Null 데이터 비율
+- Date_first_b​ ooking : 67% (테스트 데이터중 100%) (최종 미사용)
+- Age : 42% (null 데이터에 한해 기존의 나이분류중 5가지 계층으로 null 데이터 채움)
+- First affiliate tracked : 2% (mode 값으로 데이터 채움)
 
--  분별을 할 때, 제일 중요한 것은 분별할 수 있는 feature를 생성하는 게 중요
--  classification은 여러 모델이 존재하기 때문에 어떤 모델을 쓰는 것에 집중하게 된다. 하지만 실제 Perfomance에서는 어느 모델을 쓰는 것 보다는 class를 분별해 주는 feature를 생성할 때 성능을 많이 올리게 되었다.
+성별 데이터
+- 남자, 여자, Unknown, others존재
+- 교차검증기준 남자, 여자 데이터만 사용
+- Light GBM을 통한 unknown, other를 남자, 여자로 분류
 
+First active date / account create date
+- 년, 월, 일 사용
+- First active date를 기준으로 주말, 공휴일 데이터 사용
 
+Lagging time : First active date 와 create account date의 시간차를 사용
 
-### Create features할 때 생각해야 되는 것
+Faithless sign-in
+- Gender가 unkwon으로 입력 및 나이데이터를 입력하지 않은 경우의 데이터 사용
 
-- feature를 만든 이유를 설명할 때, feature의 EDA를 통해 발견한 insight로 설명해 주는 것이 좋다.
+세션 데이터
+- Action, action type : 사용자의 행동 및 어떤종류의 행동인지에 대한 데이터
+- Count, mode데이터를 사용
+- Session elapsed : 사용자가 채류한 시간데이터
+- Mode, median, mean 데이터를 사용
+- Device type : 어떤 종류의 장치인지에 대한 데이터
+- Mode 데이터 사용
 
+카테고리 데이터
+- 카테고리 변수를 더미변수로 변경
 
+“최종 1054개 Feature 사용”
 
-### 데이터 시각화에 대한 방법
+### 모델링
 
-- 실제 데이터를 가지고 시각화를 할 때, 전체 데이터를 보여준면 큰 차이가 보이지 않는 경우가 발생한다. 그렇기 때문에 mean, median으로 했다. 하지만 **log**를 취해 그 차이를 확대 시킬 수 있다.
+교차검증
 
+- NDCG의 경우 정답인 순서를 학습시켜야 해서 사용불가
+- Log loss로 분류검증
+- 로지스틱 회귀분석, SVM, Randomforest, Light GBM, Ensemble model등을 활용한 분류성능 평가
 
+“교차검증기준 Light GBM이 구동시간 및 성능이 가장 우수”
 
-### log loss에 대해서 ...
+- Light GBM 파라미터 튜닝 (교차검증기준 가장 성능이 우수한 parameter 선택)
+Boost-type = ‘gbtr’
+Evaluation metric = log loss
+Learning rate = 0.1
+Number of estimator = 100
+L1 regularization = 1
+L2 regularization = 0
+모델 accuracy : 0.65, precision :0.69, recall : 0.66
 
-- log loss를 사용할 때, CV를 사용할 때에는 음수가 되고, error function으로 사용할 때에는 양수이다. 그 이유는 error는 적을 수록 좋고 CV는 높은 수록 좋게 만들기 위해서 CV에 음수를 사용했다.
-
-
-
-### 비대칭적인 문제
-
-- 일반적인 classification을 할 때, class가 한 쪽에 몰려 있으면 많은 데이터에 accurancy는 높지만 recall이 매우 낮게 나오는 경우가 발생하게 된다. 그 이유는 대부분 예측 값을 몰려 있는 데이터로 선택할 때, accurancy가 높게 나오기 때문이다.
-- airbnb 같은 경우도 NDF에 값이 몰려 있기 때문에, 예측 값이 대부분이 NDF가 선택 된다.
-- 이 문제를 해결하기 위해서는 over-sampling, under-sampling을 사용한다. 그 외에도 weight-class를 주어서 대칭적인 문제를 해결한다.
-- 하지만 airbnb 문제에는 weight-class를 이용했을 때 recall은 높일 수 있지만 kaggle 점수는 낮아지기 때문에 사용하지 않았다.
-
-
-
-- 적은 애들의 인사이트를 발견하기 위해서는 많이 있는 class를 제외하고 classification을 진행해 인사이트를 얻는다.  
-
-
-
-### EDA의 중요성
-
-- regression에도 느낀 것이지만 사용하는 feature들에 대해서 아는 것이 매우 중요하다. 
-- EDA를 통해서 feature 생성에 대한 인사이트를 얻을 수 있고, 다른 사람들에게 설명을 할 때에도 큰 도움이 될 수 있다.
-- But, EDA는 결론에 큰 도움이 될 수 없다. EDA로 힌트를 얻을 수 있지만, 결론을 도출하기에는 도움이 않된다.
-
-
-
-### feature가 유의한지 않하는 가?
-
-- binary 문제에 대한 유의성은 bernoulli test / One-way ANOVA로 판단할 수 있다.
-- multiclass 문제에 대한 유의성은 One-way ANOVA로 판단할 수 있다.
-
-
-
-### Ensemble 방법에 대한 Tree 분석
-
-- Ensemble에 대한 Tree에 대한 분석은 큰 의미가 없다. 그 이유는 Ensemble에 사용되는 Tree는 weak classifier이기 때문에 분석이 큰 의미를 가지지 않는다. 
+### 결론
+- NDCG 결과: 0.88461 (상위 11%)
+"Target 데이터 imbalanced현상으로 특정 데이터의 recall이 높은데 One vs
+One문제 및 stacking을 통한 성능개선 요지"
