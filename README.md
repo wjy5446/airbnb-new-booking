@@ -1,5 +1,9 @@
 # kaggle : Airbnb New User Bookings
 
+### 팀프로젝트
+
+- 박성호, 윤재영, 조준기
+
 ### 개요
 
 - Airbnb의 사용자가 어느나라를 예약할지 분류 예측문제
