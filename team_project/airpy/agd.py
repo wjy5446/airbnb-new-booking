@@ -1,11 +1,4 @@
 
-# coding: utf-8
-
-# ### Import
-
-# In[5]:
-
-
 import numpy as np
 import pandas as pd
 from sklearn.metrics import *
@@ -19,7 +12,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.tree import export_graphviz
 import io
 from sklearn.preprocessing import Imputer
-import pydot
 from sklearn import preprocessing
 import lightgbm as lgb
 from scipy.stats import mode
@@ -210,5 +202,3 @@ def predict_age_LightGBM(pre_age_train_test_drop, cats, pre_age_mission_test_dro
 
 
 # ### Age predict data make CSV
-
-# ---

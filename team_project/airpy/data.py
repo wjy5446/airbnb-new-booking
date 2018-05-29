@@ -1,4 +1,3 @@
-
 # coding: utf-8
 
 # ### Import
@@ -20,7 +19,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.tree import export_graphviz
 import io
 from sklearn.preprocessing import Imputer
-import pydot
 from sklearn import preprocessing
 import lightgbm as lgb
 from scipy.stats import mode
@@ -321,6 +319,3 @@ def last_data_setting(last_train_data, last_test_data):
     last_test_data_add.to_csv("last_test_data_add.csv", index=False)
     
     return last_train_data_add, last_test_data_add
-
-
-# ---

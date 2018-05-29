@@ -19,7 +19,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.tree import export_graphviz
 import io
 from sklearn.preprocessing import Imputer
-import pydot
 from sklearn import preprocessing
 import lightgbm as lgb
 from scipy.stats import mode
@@ -156,6 +155,3 @@ def sessions_detail_add():
     merged_sessions = last_merged_sessions.to_csv("merged_sessions.csv", index=False)
 
     return merged_sessions
-
-
-# ---
